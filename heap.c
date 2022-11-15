@@ -83,15 +83,10 @@ void merge_free_blocks(char* block_left, char* block_right){
 	*block_left = block_l_size + block_r_size + 1;
 }
 
-void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
+void right_merge_free_blocks(char* ptr){
 	char size_block = *(ptr-1);
-	char val_next_block;
 	char* next_block;
-	
-	char* ptr_left;
-	char size_left_free_block;
-
-	*(ptr) = FREE_BLOCK;
+	char val_next_block;
 
 	next_block = ptr+size_block;
 	val_next_block = *(next_block+1);
@@ -99,8 +94,12 @@ void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
 	if ( val_next_block == FREE_BLOCK){ // it means we have to merge the blocks
 		merge_free_blocks(ptr-1,next_block);
 	}
+}
 
-	// Now we need to look left to see if a block might be merged
+void left_merge_free_blocks(char* ptr){
+	char* ptr_left;
+	char size_left_free_block;
+
 	ptr_left = ptr-1;
 	while(*ptr_left != FREE_BLOCK && ptr_left > heap){ // rewind to the first FREE_BLOCK
 		ptr_left--;
@@ -113,6 +112,16 @@ void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
 			merge_free_blocks(ptr_left-1,ptr-1);
 		}
 	}
+}
+
+void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
+
+	*(ptr) = FREE_BLOCK;
+
+	right_merge_free_blocks(ptr);
+
+	// Now we need to look left to see if a block might be merged
+	left_merge_free_blocks(ptr);
 }
 
 char *heap_malloc(unsigned int size){
