@@ -127,6 +127,66 @@ void test_first_fit_fit_in_between(){
 	CU_ASSERT(ptr == heap+11);
 }
 
+void test_find_new_libre(){
+	int future_libre;
+
+	init_heap();
+
+	heap[0] = 10;
+	strcpy(heap+1,"tp1");
+
+	heap[0+10+1] = 9;
+	heap[11+1] = -1;
+
+	libre = 11;
+
+	heap[11+9+1] = 5;
+	strcpy(heap+21+1,"tp3");
+
+	heap[27] = 100;
+	heap[28] = -1;
+
+	heap[12] = INIT_VAL;
+
+	future_libre = find_new_libre(heap+11);
+
+	CU_ASSERT(future_libre == 27);
+}
+
+void test_heap_malloc_example(){
+
+	init_heap();
+
+	char* p1 = heap_malloc(10);
+	/*print_heap();*/
+
+	CU_ASSERT(p1-1 == heap);
+	CU_ASSERT(*(p1+1) != FREE_BLOCK);
+
+	CU_ASSERT(libre == 10+1);
+	CU_ASSERT(*(heap + libre) == 116);
+	CU_ASSERT(*(heap + libre + 1) == FREE_BLOCK);
+
+	char* p2 = heap_malloc(9);
+	/*print_heap();*/
+
+	CU_ASSERT(p2 == heap+12);
+	CU_ASSERT(*(p2-1) == 9);
+	CU_ASSERT(libre == 21);
+
+	char* p3 = heap_malloc(5);
+	/*print_heap();*/
+
+	CU_ASSERT(p3 == heap + 22);
+	CU_ASSERT(*(p3-1) == 5);
+	CU_ASSERT(libre == 27);
+
+	char* p4 = heap_malloc(101);
+	print_heap();
+
+	CU_ASSERT(p4 == NULL);
+}
+
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
 
@@ -152,7 +212,9 @@ int main()
 		NULL == CU_add_test(pSuite, "test_first_fit_simple()", test_first_fit_simple)||
 		NULL == CU_add_test(pSuite, "test_first_fit_more()", test_first_fit_more)||
 		NULL == CU_add_test(pSuite, "test_first_fit_fit_in_between()", test_first_fit_fit_in_between)||
-		NULL == CU_add_test(pSuite, "test_first_fit_dont_fit_in_between()", test_first_fit_dont_fit_in_between)
+		NULL == CU_add_test(pSuite, "test_first_fit_dont_fit_in_between()", test_first_fit_dont_fit_in_between)||
+		NULL == CU_add_test(pSuite, "test_find_new_libre()", test_find_new_libre)||
+		NULL == CU_add_test(pSuite, "test_heap_malloc_example()", test_heap_malloc_example)
 	)
 	{
 		CU_cleanup_registry();
