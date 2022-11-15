@@ -97,6 +97,7 @@ void right_merge_free_blocks(char* ptr){
 }
 
 void left_merge_free_blocks(char* ptr){
+	int index_ptr;
 	char* ptr_left;
 	char size_left_free_block;
 
@@ -110,15 +111,27 @@ void left_merge_free_blocks(char* ptr){
 		if (ptr_left + size_left_free_block + 1 == ptr){
 			// We shall merge the blocks, the first free block on the left is glued to this one
 			merge_free_blocks(ptr_left-1,ptr-1);
+			// Let's update libre with the new block
+			index_ptr = ptr_left-1-heap;
+			if (index_ptr < libre){
+				libre = index_ptr;
+			}
 		}
 	}
 }
 
 void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
+	int index_ptr;
 
 	*(ptr) = FREE_BLOCK;
 
 	right_merge_free_blocks(ptr);
+
+	index_ptr = ptr-1-heap;
+	if (index_ptr < libre){
+		libre = index_ptr;
+		printf("updating libre, libre = %d\n", libre);
+	}
 
 	// Now we need to look left to see if a block might be merged
 	left_merge_free_blocks(ptr);

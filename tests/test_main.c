@@ -214,22 +214,26 @@ void test_heap_free_several(){
 	strcpy(p3,"tp3");
 	strcpy(p4,"tp4");
 	
-	/*print_heap();*/
-
-	heap_free(p2);
-
-	/*print_heap();*/
+	heap_free(p2); // simple free
 
 	CU_ASSERT(*(p2-1) == 10);
 	CU_ASSERT(*(p2) == FREE_BLOCK);
+	CU_ASSERT(libre == p2 - 1 - heap);
 
-	heap_free(p3);
+	heap_free(p3); // testing merge left
 
 	CU_ASSERT(*(p3) == INIT_VAL);
 	CU_ASSERT(*(p3-1) == INIT_VAL);
 
 	CU_ASSERT(*(p2-1) == 21);
 	CU_ASSERT(*(p2) == FREE_BLOCK);
+	CU_ASSERT(libre == p2 - 1 - heap);
+
+	heap_free(p1); // testing merge right
+
+	CU_ASSERT(*(p1-1) == 32);
+	CU_ASSERT(*(p1) == FREE_BLOCK);
+	CU_ASSERT(libre == 0);
 
 }
 
