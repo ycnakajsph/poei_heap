@@ -15,4 +15,6 @@ char *heap_malloc(unsigned int size);
 // free a pointer in the heap
 int heap_free(char *ptr);
 
+char* first_fit(unsigned int size);
+
 #endif
