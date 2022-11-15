@@ -182,9 +182,55 @@ void test_heap_malloc_example(){
 	CU_ASSERT(libre == 27);
 
 	char* p4 = heap_malloc(101);
-	print_heap();
+	/*print_heap();*/
 
 	CU_ASSERT(p4 == NULL);
+}
+
+void test_heap_free(){
+
+	init_heap();
+
+	char* p1 = heap_malloc(10);
+	
+	heap_free(p1);
+
+	CU_ASSERT(heap[0] == 127);
+	CU_ASSERT(heap[1] == FREE_BLOCK);
+
+}
+
+void test_heap_free_several(){
+
+	init_heap();
+
+	char* p1 = heap_malloc(10);
+	char* p2 = heap_malloc(10);
+	char* p3 = heap_malloc(10);
+	char* p4 = heap_malloc(10);
+
+	strcpy(p1,"tp1");
+	strcpy(p2,"tp2");
+	strcpy(p3,"tp3");
+	strcpy(p4,"tp4");
+	
+	/*print_heap();*/
+
+	heap_free(p2);
+
+	/*print_heap();*/
+
+	CU_ASSERT(*(p2-1) == 10);
+	CU_ASSERT(*(p2) == FREE_BLOCK);
+
+	heap_free(p3);
+
+	CU_ASSERT(*(p3) == INIT_VAL);
+	CU_ASSERT(*(p3-1) == INIT_VAL);
+
+	CU_ASSERT(*(p2-1) == 21);
+	CU_ASSERT(*(p2) == FREE_BLOCK);
+
 }
 
 int init_suite(void) { return 0; }
@@ -214,7 +260,9 @@ int main()
 		NULL == CU_add_test(pSuite, "test_first_fit_fit_in_between()", test_first_fit_fit_in_between)||
 		NULL == CU_add_test(pSuite, "test_first_fit_dont_fit_in_between()", test_first_fit_dont_fit_in_between)||
 		NULL == CU_add_test(pSuite, "test_find_new_libre()", test_find_new_libre)||
-		NULL == CU_add_test(pSuite, "test_heap_malloc_example()", test_heap_malloc_example)
+		NULL == CU_add_test(pSuite, "test_heap_malloc_example()", test_heap_malloc_example)||
+		NULL == CU_add_test(pSuite, "test_heap_free()", test_heap_free)||
+		NULL == CU_add_test(pSuite, "test_heap_free_several()", test_heap_free_several)
 	)
 	{
 		CU_cleanup_registry();

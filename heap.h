@@ -14,7 +14,7 @@ void init_heap(void);
 // allocate a pointer of size size
 char *heap_malloc(unsigned int size);
 // free a pointer in the heap
-int heap_free(char *ptr);
+void heap_free(char *ptr);
 
 char* first_fit(unsigned int size);
 int find_new_libre(char* ptr);
