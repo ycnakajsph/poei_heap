@@ -6,7 +6,7 @@
 #include <CUnit/CUnit.h>
 #include <CUnit/Basic.h>
 
-#include "../tas.h"
+#include "../heap.h"
 
 void test_dummy(){
 

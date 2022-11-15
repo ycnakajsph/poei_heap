@@ -3,10 +3,10 @@ CFLAGS += -Wall --pedantic -Werror
 DEBUG_FLAGS += -g
 
 all:
-	$(CC) $(LDFLAGS) -o tas $(CFLAGS) tas.c main.c
+	$(CC) $(LDFLAGS) -o heap $(CFLAGS) heap.c main.c
 
 test:
-	$(CC) $(LDFLAGS)  -o tas_tests $(CFLAGS) tests/test_main.c tas.c -lcunit
+	$(CC) $(LDFLAGS)  -o heap_tests $(CFLAGS) tests/test_main.c heap.c -lcunit
 
 clean:
-	rm -f *.o tas_tests tas
+	rm -f *.o heap_tests heap
