@@ -8,8 +8,12 @@
 
 #include "../heap.h"
 
-void test_dummy(){
+void test_heap_init(){
+	init_heap();
 
+	CU_ASSERT(heap[0] == SIZE_HEAP-1);
+	CU_ASSERT(heap[1] == FREE_BLOCK);
+	CU_ASSERT(libre == 0);
 }
 
 int init_suite(void) { return 0; }
@@ -32,7 +36,7 @@ int main()
 
 	/* add the tests to the suite */
 	if (
-		NULL == CU_add_test(pSuite, "test_dummy()", test_dummy)
+		NULL == CU_add_test(pSuite, "test_heap_init()", test_heap_init)
 	)
 	{
 		CU_cleanup_registry();
