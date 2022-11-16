@@ -16,7 +16,10 @@ char *heap_malloc(unsigned int size);
 // free a pointer in the heap
 void heap_free(char *ptr);
 
+char* (*strategy)(unsigned int size);
+void set_strategy(char* (*strat)(unsigned int size));
 char* first_fit(unsigned int size);
+
 int find_new_libre(char* ptr);
 
 void print_heap(void);

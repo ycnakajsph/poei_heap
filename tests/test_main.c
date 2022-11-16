@@ -268,6 +268,15 @@ void test_full_example(){
 	CU_ASSERT(strcmp(p4,"systeme") == 0);
 }
 
+void test_set_strategy(){
+	init_heap();
+
+	set_strategy(&first_fit);
+
+	test_full_example();
+
+}
+
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
 
@@ -298,7 +307,8 @@ int main()
 		NULL == CU_add_test(pSuite, "test_heap_malloc_example()", test_heap_malloc_example)||
 		NULL == CU_add_test(pSuite, "test_heap_free()", test_heap_free)||
 		NULL == CU_add_test(pSuite, "test_heap_free_several()", test_heap_free_several)||
-		NULL == CU_add_test(pSuite, "test_full_example()", test_full_example)
+		NULL == CU_add_test(pSuite, "test_full_example()", test_full_example)||
+		NULL == CU_add_test(pSuite, "test_set_strategy()", test_set_strategy)
 	)
 	{
 		CU_cleanup_registry();

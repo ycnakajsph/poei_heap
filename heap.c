@@ -36,6 +36,12 @@ void init_heap(void){
 	heap[0] = SIZE_HEAP-1;
 	heap[1] = FREE_BLOCK;
 	libre = 0;
+
+	strategy = &first_fit; // By default the strategy is first_fit
+}
+
+void set_strategy(char* (*strat)(unsigned int size)){
+	strategy = strat;
 }
 
 int get_index_on_heap(char* ptr){
@@ -144,7 +150,7 @@ void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
 
 char *heap_malloc(unsigned int size){
 
-	char* ptr = first_fit(size);
+	char* ptr = strategy(size);
 	char leftover;
 
 	if (ptr == NULL){
