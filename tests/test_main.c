@@ -237,6 +237,37 @@ void test_heap_free_several(){
 
 }
 
+void test_full_example(){
+	init_heap();
+
+	char* p1 = heap_malloc(10);
+	char* p2 = heap_malloc(9);
+	char* p3 = heap_malloc(5);
+
+	strcpy(p1,"tp 1");
+	strcpy(p2,"tp 2");
+	strcpy(p3,"tp 3");
+
+	heap_free(p2);
+
+	// That verifies that in case we have 1 byte left we actually malloc size+1
+	char* p4 = heap_malloc(8);
+	strcpy(p4,"systeme");
+
+	/*print_heap();*/
+
+	CU_ASSERT(*(p1-1) == 10);
+	CU_ASSERT(*(p4-1) == 9);
+	CU_ASSERT(*(p3-1) == 5);
+	CU_ASSERT(libre == 27);
+	CU_ASSERT(heap[27] == 100);
+	CU_ASSERT(heap[28] == -1);
+
+	CU_ASSERT(strcmp(p1,"tp 1") == 0);
+	CU_ASSERT(strcmp(p3,"tp 3") == 0);
+	CU_ASSERT(strcmp(p4,"systeme") == 0);
+}
+
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
 
@@ -266,7 +297,8 @@ int main()
 		NULL == CU_add_test(pSuite, "test_find_new_libre()", test_find_new_libre)||
 		NULL == CU_add_test(pSuite, "test_heap_malloc_example()", test_heap_malloc_example)||
 		NULL == CU_add_test(pSuite, "test_heap_free()", test_heap_free)||
-		NULL == CU_add_test(pSuite, "test_heap_free_several()", test_heap_free_several)
+		NULL == CU_add_test(pSuite, "test_heap_free_several()", test_heap_free_several)||
+		NULL == CU_add_test(pSuite, "test_full_example()", test_full_example)
 	)
 	{
 		CU_cleanup_registry();

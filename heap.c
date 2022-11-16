@@ -130,7 +130,7 @@ void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
 	index_ptr = ptr-1-heap;
 	if (index_ptr < libre){
 		libre = index_ptr;
-		printf("updating libre, libre = %d\n", libre);
+		/*printf("updating libre, libre = %d\n", libre);*/
 	}
 
 	// Now we need to look left to see if a block might be merged
