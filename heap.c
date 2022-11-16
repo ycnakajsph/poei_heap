@@ -38,6 +38,14 @@ void init_heap(void){
 	libre = 0;
 }
 
+int get_index_on_heap(char* ptr){
+	return ptr-heap;
+}
+
+char get_block_size(char* ptr){
+	return *(ptr-1);
+}
+
 char* first_fit(unsigned int size){
 
 	int jump;
@@ -60,12 +68,9 @@ char* first_fit(unsigned int size){
 int find_new_libre(char* ptr){
 	int jump;
 
-	/*jump = *ptr+1;
-	ptr = ptr + jump; // move to the next block*/
-
 	while (ptr < heap+SIZE_HEAP-1){ // Walks through the heap
 		if (*(ptr+1) == FREE_BLOCK){ // if found a free block return its index
-			return ptr-heap;
+			return get_index_on_heap(ptr);
 		}
 		jump = *ptr+1;
 		ptr = ptr + jump;
@@ -84,7 +89,7 @@ void merge_free_blocks(char* block_left, char* block_right){
 }
 
 void right_merge_free_blocks(char* ptr){
-	char size_block = *(ptr-1);
+	char size_block = get_block_size(ptr);
 	char* next_block;
 	char val_next_block;
 
@@ -112,7 +117,7 @@ void left_merge_free_blocks(char* ptr){
 			// We shall merge the blocks, the first free block on the left is glued to this one
 			merge_free_blocks(ptr_left-1,ptr-1);
 			// Let's update libre with the new block
-			index_ptr = ptr_left-1-heap;
+			index_ptr = get_index_on_heap(ptr_left-1);
 			if (index_ptr < libre){
 				libre = index_ptr;
 			}
@@ -127,7 +132,7 @@ void heap_free(char* ptr){ // We'll assume that ptr is a correct pointer
 
 	right_merge_free_blocks(ptr);
 
-	index_ptr = ptr-1-heap;
+	index_ptr = get_index_on_heap(ptr-1);
 	if (index_ptr < libre){
 		libre = index_ptr;
 		/*printf("updating libre, libre = %d\n", libre);*/
@@ -161,7 +166,7 @@ char *heap_malloc(unsigned int size){
 		*ptr = size + 1; // in case there's only 1 byte left we allocate it too
 	}
 
-	if (ptr-heap == libre){ // we need to update libre then
+	if (get_index_on_heap(ptr) == libre){ // we need to update libre then
 		libre = find_new_libre(ptr);
 		/*printf("updating libre to %d\n", libre);*/
 	}

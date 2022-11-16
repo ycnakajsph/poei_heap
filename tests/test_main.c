@@ -49,11 +49,11 @@ void test_first_fit_simple(){
 
 	char* ptr = first_fit(10);
 
-	CU_ASSERT(ptr == heap+4);
+	CU_ASSERT(get_index_on_heap(ptr) == 4);
 
 	ptr = first_fit(123);
 
-	CU_ASSERT(ptr == heap+4);
+	CU_ASSERT(get_index_on_heap(ptr) == 4);
 
 	ptr = first_fit(124);
 
@@ -102,7 +102,7 @@ void test_first_fit_dont_fit_in_between(){
 
 	char* ptr = first_fit(10);
 
-	CU_ASSERT(ptr == heap+27);
+	CU_ASSERT(get_index_on_heap(ptr) == 27);
 }
 
 void test_first_fit_fit_in_between(){
@@ -124,7 +124,7 @@ void test_first_fit_fit_in_between(){
 
 	char* ptr = first_fit(9);
 
-	CU_ASSERT(ptr == heap+11);
+	CU_ASSERT(get_index_on_heap(ptr) == 11);
 }
 
 void test_find_new_libre(){
@@ -160,7 +160,7 @@ void test_heap_malloc_example(){
 	char* p1 = heap_malloc(10);
 	/*print_heap();*/
 
-	CU_ASSERT(p1-1 == heap);
+	CU_ASSERT(get_index_on_heap(p1-1) == 0);
 	CU_ASSERT(*(p1+1) != FREE_BLOCK);
 
 	CU_ASSERT(libre == 10+1);
@@ -170,15 +170,15 @@ void test_heap_malloc_example(){
 	char* p2 = heap_malloc(9);
 	/*print_heap();*/
 
-	CU_ASSERT(p2 == heap+12);
-	CU_ASSERT(*(p2-1) == 9);
+	CU_ASSERT(get_index_on_heap(p2) == 12);
+	CU_ASSERT(get_block_size(p2) == 9);
 	CU_ASSERT(libre == 21);
 
 	char* p3 = heap_malloc(5);
 	/*print_heap();*/
 
-	CU_ASSERT(p3 == heap + 22);
-	CU_ASSERT(*(p3-1) == 5);
+	CU_ASSERT(get_index_on_heap(p3) == 22);
+	CU_ASSERT(get_block_size(p3) == 5);
 	CU_ASSERT(libre == 27);
 
 	char* p4 = heap_malloc(101);
@@ -216,22 +216,22 @@ void test_heap_free_several(){
 	
 	heap_free(p2); // simple free
 
-	CU_ASSERT(*(p2-1) == 10);
+	CU_ASSERT(get_block_size(p2) == 10);
 	CU_ASSERT(*(p2) == FREE_BLOCK);
-	CU_ASSERT(libre == p2 - 1 - heap);
+	CU_ASSERT(libre == get_index_on_heap(p2 - 1));
 
 	heap_free(p3); // testing merge left
 
 	CU_ASSERT(*(p3) == INIT_VAL);
 	CU_ASSERT(*(p3-1) == INIT_VAL);
 
-	CU_ASSERT(*(p2-1) == 21);
+	CU_ASSERT(get_block_size(p2) == 21);
 	CU_ASSERT(*(p2) == FREE_BLOCK);
-	CU_ASSERT(libre == p2 - 1 - heap);
+	CU_ASSERT(libre == get_index_on_heap(p2 - 1));
 
 	heap_free(p1); // testing merge right
 
-	CU_ASSERT(*(p1-1) == 32);
+	CU_ASSERT(get_block_size(p1) == 32);
 	CU_ASSERT(*(p1) == FREE_BLOCK);
 	CU_ASSERT(libre == 0);
 
@@ -256,9 +256,9 @@ void test_full_example(){
 
 	/*print_heap();*/
 
-	CU_ASSERT(*(p1-1) == 10);
-	CU_ASSERT(*(p4-1) == 9);
-	CU_ASSERT(*(p3-1) == 5);
+	CU_ASSERT(get_block_size(p1) == 10);
+	CU_ASSERT(get_block_size(p4) == 9);
+	CU_ASSERT(get_block_size(p3) == 5);
 	CU_ASSERT(libre == 27);
 	CU_ASSERT(heap[27] == 100);
 	CU_ASSERT(heap[28] == -1);

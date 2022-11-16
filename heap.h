@@ -21,4 +21,7 @@ int find_new_libre(char* ptr);
 
 void print_heap(void);
 
+int get_index_on_heap(char* ptr);
+char get_block_size(char* ptr);
+
 #endif
