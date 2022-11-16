@@ -277,6 +277,58 @@ void test_set_strategy(){
 
 }
 
+void test_best_fit(){
+	init_heap();
+
+	set_strategy(&best_fit);
+	
+	char* p1 = heap_malloc(10);
+	/*print_heap();*/
+
+	CU_ASSERT(get_index_on_heap(p1-1) == 0);
+	CU_ASSERT(*(p1+1) != FREE_BLOCK);
+
+	CU_ASSERT(libre == 10+1);
+	CU_ASSERT(*(heap + libre) == 116);
+	CU_ASSERT(*(heap + libre + 1) == FREE_BLOCK);
+
+	char* p2 = heap_malloc(9);
+	CU_ASSERT(get_index_on_heap(p2) == 12);
+	CU_ASSERT(get_block_size(p2) == 9);
+	CU_ASSERT(libre == 21);
+
+	char* p3 = heap_malloc(5);
+	CU_ASSERT(get_index_on_heap(p3) == 22);
+	CU_ASSERT(get_block_size(p3) == 5);
+	CU_ASSERT(libre == 27);
+
+	char* p4 = heap_malloc(12);
+	CU_ASSERT(get_index_on_heap(p4) == 28);
+	CU_ASSERT(get_block_size(p4) == 12);
+	CU_ASSERT(libre == 40);
+	
+	char* p5 = heap_malloc(17);
+	CU_ASSERT(get_index_on_heap(p5) == 41);
+	CU_ASSERT(get_block_size(p5) == 17);
+
+	strcpy(p1,"tp 1");
+	strcpy(p2,"tp 2");
+	strcpy(p3,"tp 3");
+	strcpy(p4,"tp 4");
+	strcpy(p5,"tp 5");
+
+	heap_free(p4);
+	heap_free(p2);
+
+	CU_ASSERT(best_fit(SIZE_HEAP) == NULL);
+	CU_ASSERT(best_fit(13) == heap+58);
+	CU_ASSERT(best_fit(12) == p4-1);
+	CU_ASSERT(best_fit(10) == p4-1);
+	CU_ASSERT(best_fit(9) == p2-1);
+	CU_ASSERT(best_fit(1) == p2-1);
+
+}
+
 int init_suite(void) { return 0; }
 int clean_suite(void) { return 0; }
 
@@ -308,7 +360,8 @@ int main()
 		NULL == CU_add_test(pSuite, "test_heap_free()", test_heap_free)||
 		NULL == CU_add_test(pSuite, "test_heap_free_several()", test_heap_free_several)||
 		NULL == CU_add_test(pSuite, "test_full_example()", test_full_example)||
-		NULL == CU_add_test(pSuite, "test_set_strategy()", test_set_strategy)
+		NULL == CU_add_test(pSuite, "test_set_strategy()", test_set_strategy)||
+		NULL == CU_add_test(pSuite, "test_best_fit()", test_best_fit)
 	)
 	{
 		CU_cleanup_registry();

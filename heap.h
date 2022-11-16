@@ -19,6 +19,7 @@ void heap_free(char *ptr);
 char* (*strategy)(unsigned int size);
 void set_strategy(char* (*strat)(unsigned int size));
 char* first_fit(unsigned int size);
+char* best_fit(unsigned int size);
 
 int find_new_libre(char* ptr);
 

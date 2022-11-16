@@ -52,6 +52,23 @@ char get_block_size(char* ptr){
 	return *(ptr-1);
 }
 
+char* best_fit(unsigned int size){
+	int jump;
+	char* ptr = heap+libre;
+	char* smallest_fit = NULL;
+	int curr_size = SIZE_HEAP;
+
+	while(ptr < heap+SIZE_HEAP-1){
+		if (*ptr < curr_size && *ptr >= size && *(ptr+1) == FREE_BLOCK){
+			curr_size = *ptr;
+			smallest_fit = ptr;
+		}
+		jump = *ptr+1;
+		ptr = ptr + jump;
+	}
+	return smallest_fit;
+}
+
 char* first_fit(unsigned int size){
 
 	int jump;
